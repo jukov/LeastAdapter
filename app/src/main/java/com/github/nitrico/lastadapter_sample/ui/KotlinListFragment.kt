@@ -2,7 +2,13 @@ package com.github.nitrico.lastadapter_sample.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.nitrico.lastadapter.LastAdapter
 import com.github.nitrico.lastadapter.Type
 import com.github.nitrico.lastadapter_sample.data.Car
@@ -20,7 +26,9 @@ import info.jukov.leastadapter_sample.databinding.ItemPersonBinding
 import info.jukov.leastadapter_sample.databinding.ItemPointBinding
 
 @Suppress("unused")
-class KotlinListFragment : ListFragment() {
+class KotlinListFragment : Fragment() {
+
+    private lateinit var list: RecyclerView
 
     private val typeHeader = Type<ItemHeaderBinding>(R.layout.item_header)
             .onCreate { println("Created ${it.binding.item} at #${it.adapterPosition}") }
@@ -58,14 +66,18 @@ class KotlinListFragment : ListFragment() {
             .onLongClick { activity.toast("Long-clicked #${it.adapterPosition}: ${it.binding.item}") }
 
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.fragment_list, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        list = view.findViewById(R.id.list)
+        list.layoutManager = LinearLayoutManager(activity)
+
         val items = Data.items
         val stableIds = items == StableData.items
 
-        //setMapAdapter(items, stableIds)
-        //setMapAdapterWithListeners(items, stableIds)
-        //setLayoutHandlerAdapter(items, stableIds)
         setTypeHandlerAdapter(items, stableIds)
     }
 

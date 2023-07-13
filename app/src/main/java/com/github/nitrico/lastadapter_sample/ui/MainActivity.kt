@@ -4,13 +4,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
 import com.github.nitrico.lastadapter_sample.data.Data
 import com.github.nitrico.lastadapter_sample.data.Header
-import com.google.android.material.tabs.TabLayout
 import info.jukov.leastadapter_sample.R
 import java.util.Random
 
@@ -24,15 +19,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(findViewById(R.id.toolbar))
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        val viewPager = findViewById<ViewPager>(R.id.pager)
-        val tabLayout = findViewById<TabLayout>(R.id.tabs)
-
-        setSupportActionBar(toolbar)
-
-        viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
-        tabLayout.setupWithViewPager(viewPager)
+        savedInstanceState ?: supportFragmentManager.beginTransaction()
+            .replace(R.id.container, KotlinListFragment())
+            .commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu) = consume { menuInflater.inflate(R.menu.main, menu) }
@@ -62,12 +53,6 @@ class MainActivity : AppCompatActivity() {
     private fun consume(f: () -> Unit): Boolean {
         f()
         return true
-    }
-
-    class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-        override fun getCount() = 2
-        override fun getItem(i: Int) = if (i == 0) KotlinListFragment() else JavaListFragment()
-        override fun getPageTitle(i: Int) = if (i == 0) "Kotlin" else "Java"
     }
 
 }
