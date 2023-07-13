@@ -1,30 +1,38 @@
 package com.github.nitrico.lastadapter_sample.ui
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import com.github.nitrico.lastadapter_sample.data.Data
-import com.github.nitrico.lastadapter_sample.R
 import com.github.nitrico.lastadapter_sample.data.Header
-import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
+import info.jukov.leastadapter_sample.R
+import java.util.Random
 
 class MainActivity : AppCompatActivity() {
 
     private val random = Random()
 
-    private var randomPosition: Int = 0
+    private val randomPosition: Int
         get() = random.nextInt(Data.items.size-1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val viewPager = findViewById<ViewPager>(R.id.pager)
+        val tabLayout = findViewById<TabLayout>(R.id.tabs)
+
         setSupportActionBar(toolbar)
-        pager.adapter = ViewPagerAdapter(supportFragmentManager)
-        tabs.setupWithViewPager(pager)
+
+        viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
+        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun onCreateOptionsMenu(menu: Menu) = consume { menuInflater.inflate(R.menu.main, menu) }

@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
+@Suppress("unused")
 class LastAdapter(private val list: List<Any>,
                   private val variable: Int? = null,
                   stableIds: Boolean = false) : RecyclerView.Adapter<Holder<ViewDataBinding>>() {
@@ -35,7 +36,6 @@ class LastAdapter(private val list: List<Any>,
     private val DATA_INVALIDATION = Any()
     private val callback = ObservableListCallback(this)
     private var recyclerView: RecyclerView? = null
-    private var inflater: LayoutInflater? = null
 
     private val map = mutableMapOf<Class<*>, BaseType>()
     private var layoutHandler: LayoutHandler? = null
@@ -88,7 +88,13 @@ class LastAdapter(private val list: List<Any>,
 
 
     override fun onCreateViewHolder(view: ViewGroup, viewType: Int): Holder<ViewDataBinding> {
-        val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, viewType, view, false)
+        val binding = DataBindingUtil.inflate<ViewDataBinding>(
+            LayoutInflater.from(view.context),
+            viewType,
+            view,
+            false
+        )
+
         val holder = Holder(binding)
         binding.addOnRebindCallback(object : OnRebindCallback<ViewDataBinding>() {
             override fun onPreBind(binding: ViewDataBinding) = recyclerView?.isComputingLayout ?: false
@@ -157,7 +163,6 @@ class LastAdapter(private val list: List<Any>,
             list.addOnListChangedCallback(callback)
         }
         recyclerView = rv
-        inflater = LayoutInflater.from(rv.context)
     }
 
     override fun onDetachedFromRecyclerView(rv: RecyclerView) {

@@ -5,11 +5,21 @@ import android.os.Bundle
 import android.widget.Toast
 import com.github.nitrico.lastadapter.LastAdapter
 import com.github.nitrico.lastadapter.Type
-import com.github.nitrico.lastadapter_sample.BR
-import com.github.nitrico.lastadapter_sample.R
-import com.github.nitrico.lastadapter_sample.data.*
-import com.github.nitrico.lastadapter_sample.databinding.*
+import com.github.nitrico.lastadapter_sample.data.Car
+import com.github.nitrico.lastadapter_sample.data.Data
+import com.github.nitrico.lastadapter_sample.data.Header
+import com.github.nitrico.lastadapter_sample.data.Person
+import com.github.nitrico.lastadapter_sample.data.Point
+import com.github.nitrico.lastadapter_sample.data.StableData
+import info.jukov.leastadapter.BR
+import info.jukov.leastadapter_sample.R
+import info.jukov.leastadapter_sample.databinding.ItemCarBinding
+import info.jukov.leastadapter_sample.databinding.ItemHeaderBinding
+import info.jukov.leastadapter_sample.databinding.ItemHeaderFirstBinding
+import info.jukov.leastadapter_sample.databinding.ItemPersonBinding
+import info.jukov.leastadapter_sample.databinding.ItemPointBinding
 
+@Suppress("unused")
 class KotlinListFragment : ListFragment() {
 
     private val typeHeader = Type<ItemHeaderBinding>(R.layout.item_header)

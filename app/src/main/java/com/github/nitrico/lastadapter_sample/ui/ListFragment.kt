@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.nitrico.lastadapter_sample.R
+import info.jukov.leastadapter_sample.R
 
 open class ListFragment : Fragment() {
 

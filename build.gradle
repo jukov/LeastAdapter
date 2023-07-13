@@ -1,29 +1,25 @@
 buildscript {
     ext.versions = [
             sdkMin : 14,
-            sdkTarget : 27,
-            buildTools : '27.0.1',
-            gradlePlugin : '3.0.1',
-            kotlin : '1.2.0',
+            sdkTarget : 33,
+            gradlePlugin : '8.0.2',
+            kotlin : '1.8.22',
             support : '27.0.2'
     ]
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$versions.gradlePlugin"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0"
-        classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
     }
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
