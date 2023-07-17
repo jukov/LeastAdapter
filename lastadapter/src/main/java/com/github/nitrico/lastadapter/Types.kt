@@ -16,34 +16,29 @@
 
 package com.github.nitrico.lastadapter
 
-import androidx.databinding.ViewDataBinding
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 
-open class BaseType
-@JvmOverloads constructor(open val layout: Int, open val variable: Int? = null)
+@Suppress("unused", "PropertyName")
+open class Type<Item : Any, Binding : ViewBinding>() {
+    internal var _onCreateView: ((parent: ViewGroup) -> Binding)? = null; private set
+    internal var _onBindView: ((position: Int, item: Item, binding: Binding) -> Unit)? = null; private set
+    internal var _onRecycleView: ((binding: Binding) -> Unit)? = null; private set
+    internal var _getItemId: ((item: Item) -> Long)? = null; private set
 
-@Suppress("unused")
-abstract class AbsType<B : ViewDataBinding>
-@JvmOverloads constructor(layout: Int, variable: Int? = null) : BaseType(layout, variable)
+    fun onCreateView(action: (parent: ViewGroup) -> Binding) {
+        _onCreateView = action
+    }
 
-open class ItemType<B : ViewDataBinding>
-@JvmOverloads constructor(layout: Int, variable: Int? = null) : AbsType<B>(layout, variable) {
-    open fun onCreate(holder: Holder<B>) { }
-    open fun onBind(holder: Holder<B>) { }
-    open fun onRecycle(holder: Holder<B>) { }
+    fun onBindView(action: (position: Int, item: Item, binding: Binding) -> Unit) {
+        _onBindView = action
+    }
+
+    fun onRecycleView(action: (binding: Binding) -> Unit) {
+        _onRecycleView = action
+    }
+
+    fun getItemId(action: (item: Item) -> Long) {
+        _getItemId = action
+    }
 }
-
-open class Type<B : ViewDataBinding>
-@JvmOverloads constructor(layout: Int, variable: Int? = null) : AbsType<B>(layout, variable) {
-    internal var onCreate: Action<B>? = null; private set
-    internal var onBind: Action<B>? = null; private set
-    internal var onClick: Action<B>? = null; private set
-    internal var onLongClick: Action<B>? = null; private set
-    internal var onRecycle: Action<B>? = null; private set
-    fun onCreate(action: Action<B>?) = apply { onCreate = action }
-    fun onBind(action: Action<B>?) = apply { onBind = action }
-    fun onClick(action: Action<B>?) = apply { onClick = action }
-    fun onLongClick(action: Action<B>?) = apply { onLongClick = action }
-    fun onRecycle(action: Action<B>?) = apply { onRecycle = action }
-}
-
-typealias Action<B> = (Holder<B>) -> Unit

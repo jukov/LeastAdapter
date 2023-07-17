@@ -15,10 +15,10 @@ android {
     }
 
     buildFeatures {
-        dataBinding = true
+        viewBinding = true
         resValues = true
+        dataBinding = false
         buildConfig = false
-        viewBinding = false
         aidl = false
         renderScript = false
         shaders = false

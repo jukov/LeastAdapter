@@ -11,10 +11,10 @@ android {
     defaultConfig.minSdkVersion versions.sdkMin
 
     buildFeatures {
-        dataBinding = true
+        viewBinding = true
+        dataBinding = false
         resValues = false
         buildConfig = false
-        viewBinding = false
         aidl = false
         renderScript = false
         shaders = false
