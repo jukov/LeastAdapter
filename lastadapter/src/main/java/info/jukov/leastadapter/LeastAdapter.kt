@@ -16,6 +16,7 @@
 
 package info.jukov.leastadapter
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +25,8 @@ import androidx.viewbinding.ViewBinding
 @Suppress("unused")
 class LeastAdapter(
     items: List<Any> = emptyList(),
-    stableIds: Boolean = false
+    stableIds: Boolean = false,
+    private val diffUtil: Boolean = false
 ) : RecyclerView.Adapter<LeastAdapter.Holder>() {
 
     private var viewType = 0
@@ -39,21 +41,27 @@ class LeastAdapter(
         setHasStableIds(stableIds)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setItems(newItems: List<Any>) {
-        val old = ArrayList(items)
-        items.clear()
-        items.addAll(newItems)
-        DiffUtil.calculateDiff(DiffCallback(old)).dispatchUpdatesTo(this)
+        if (diffUtil) {
+            val old = ArrayList(items)
+            items.clear()
+            items.addAll(newItems)
+            DiffUtil.calculateDiff(DiffCallback(old)).dispatchUpdatesTo(this)
+        } else {
+            items.clear()
+            items.addAll(newItems)
+            notifyDataSetChanged()
+        }
     }
 
     fun <M : Any, B: ViewBinding> map(clazz: Class<M>, type: Type<M, B>): LeastAdapter =
         apply {
             require(type._onCreateView != null) { "onCreate not implemented" }
-            if (type._itemComparison == null && type._contentComparison != null) {
-                error("contentComparison should be implemented together with itemComparison for class $clazz")
-            }
-            if (type._itemComparison != null && type._contentComparison == null) {
-                error("itemComparison should be implemented together with contentComparison for class $clazz")
+            if (diffUtil) {
+                require(type._itemComparison != null && type._contentComparison != null) {
+                    error("comparisons should be implemented for using DiffUtil")
+                }
             }
             if (hasStableIds()) {
                 require(type._getItemId != null) {
