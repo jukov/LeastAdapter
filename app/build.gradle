@@ -10,7 +10,7 @@ android {
     compileSdkVersion versions.sdkTarget
     defaultConfig {
         applicationId "com.github.nitrico.lastadapter_sample"
-        minSdkVersion versions.sdkMin
+        minSdkVersion 21
         targetSdkVersion versions.sdkTarget
     }
 

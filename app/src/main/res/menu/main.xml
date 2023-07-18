@@ -3,32 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/addLast"
-        android:title="@string/add_last"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/addFirst"
-        android:title="@string/add_first"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/addRandom"
-        android:title="@string/add_random"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/removeFirst"
-        android:title="@string/remove_first"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/removeLast"
-        android:title="@string/remove_last"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/removeRandom"
-        android:title="@string/remove_random"
-        app:showAsAction="never"/>
+        android:id="@+id/change_data"
+        android:title="@string/change_data"
+        android:icon="@drawable/ic_change"
+        app:showAsAction="always"/>
 
 </menu>

@@ -10,15 +10,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.jukov.leastadapter.LeastAdapter
 import info.jukov.leastadapter_sample.R
-import info.jukov.leastadapter_sample.data.DiffCallback
 import info.jukov.leastadapter_sample.data.Model
 import info.jukov.leastadapter_sample.databinding.LayoutHeaderBinding
 import info.jukov.leastadapter_sample.databinding.LayoutItemBinding
+import java.lang.Integer.min
 import java.util.Random
 
 @Suppress("unused")
@@ -26,24 +25,24 @@ class ListFragment : Fragment(), MenuProvider {
 
     private lateinit var recyclerView: RecyclerView
 
-    private lateinit var adapter: RecyclerView.Adapter<*>
+    private lateinit var adapter: LeastAdapter
 
     private var items = mutableListOf<Model>()
 
     var itemId = 0
 
     init {
-        items.add(Model.Header(itemId++, "Header 0"))
-        items.add(Model.Item(itemId++, "Item 1"))
-        items.add(Model.Item(itemId++, "Item 2"))
-        items.add(Model.Item(itemId++, "Item 3"))
-        items.add(Model.Item(itemId++, "Item 4"))
-        items.add(Model.Header(itemId++, "Header 5"))
-        items.add(Model.Item(itemId++, "Item 6"))
-        items.add(Model.Item(itemId++, "Item 7"))
-        items.add(Model.Item(itemId++, "Item 8"))
-        items.add(Model.Item(itemId++, "Item 9"))
-        items.add(Model.Item(itemId++, "Item 10"))
+        items.add(Model.Header(itemId++, "Header $itemId"))
+        items.add(Model.Item(itemId++, "Item $itemId"))
+        items.add(Model.Item(itemId++, "Item $itemId"))
+        items.add(Model.Item(itemId++, "Item $itemId"))
+        items.add(Model.Item(itemId++, "Item $itemId"))
+        items.add(Model.Header(itemId++, "Header $itemId"))
+        items.add(Model.Item(itemId++, "Item $itemId"))
+        items.add(Model.Item(itemId++, "Item $itemId"))
+        items.add(Model.Item(itemId++, "Item $itemId"))
+        items.add(Model.Item(itemId++, "Item $itemId"))
+        items.add(Model.Item(itemId++, "Item $itemId"))
     }
 
     override fun onCreateView(
@@ -59,7 +58,11 @@ class ListFragment : Fragment(), MenuProvider {
         recyclerView = view.findViewById(R.id.list)
         recyclerView.layoutManager = LinearLayoutManager(activity)
 
-        adapter = LeastAdapter(items)
+        adapter = LeastAdapter(
+            items,
+            stableIds = true,
+            diffUtil = true
+        )
             .map<Model.Header, LayoutHeaderBinding>(
                 viewHolder = {
                     onCreateView { parent ->
@@ -70,6 +73,15 @@ class ListFragment : Fragment(), MenuProvider {
                         binding.root.setOnClickListener {
                             toast("Click on ${model.text}")
                         }
+                    }
+                    getItemId { model ->
+                        model.id.toLong()
+                    }
+                    itemComparison { old, new ->
+                        old.id == new.id
+                    }
+                    contentComparison { old, new ->
+                        old == new
                     }
                 }
             )
@@ -84,6 +96,15 @@ class ListFragment : Fragment(), MenuProvider {
                             toast("Click on ${model.text}")
                         }
                     }
+                    getItemId { model ->
+                        model.id.toLong()
+                    }
+                    itemComparison { old, new ->
+                        old.id == new.id
+                    }
+                    contentComparison { old, new ->
+                        old == new
+                    }
                 }
             )
             .into(recyclerView)
@@ -97,31 +118,21 @@ class ListFragment : Fragment(), MenuProvider {
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
-            R.id.addLast -> addItem(items.size)
-            R.id.addFirst -> addItem(0)
-            R.id.addRandom -> addItem(Random().nextInt(items.size))
-            R.id.removeFirst -> removeItem(0)
-            R.id.removeLast -> removeItem(items.lastIndex)
-            R.id.removeRandom -> removeItem(Random().nextInt(items.lastIndex))
+            R.id.change_data -> changeData()
         }
         return true
     }
 
-    private fun addItem(position: Int) {
-        val oldItems = ArrayList(items)
-        val id = itemId++
-        items.add(position, Model.Item(id, "User item $id"))
-        DiffUtil.calculateDiff(DiffCallback(oldItems, items))
-            .dispatchUpdatesTo(adapter)
-
-        recyclerView.scrollToPosition(position)
-    }
-
-    private fun removeItem(position: Int) {
-        val oldItems = ArrayList(items)
-        items.removeAt(position)
-        DiffUtil.calculateDiff(DiffCallback(oldItems, items))
-            .dispatchUpdatesTo(adapter)
+    private fun changeData() {
+        val random = Random()
+        for (i in items.indices) {
+            when (random.nextInt(3)) {
+                0 -> items.removeAt(min(i, items.lastIndex))
+                1 -> items.add(Model.Item(itemId++, "Item $itemId"))
+                else -> Unit
+            }
+        }
+        adapter.setItems(items)
     }
 
     private fun toast(text: String) = requireContext().let {

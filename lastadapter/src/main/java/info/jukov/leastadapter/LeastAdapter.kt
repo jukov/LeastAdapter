@@ -35,7 +35,7 @@ class LeastAdapter(
     private val classToType = mutableMapOf<Class<*>, Type<*, *>>()
     private val viewTypeToType = mutableMapOf<Int, Type<*, *>>()
 
-    private val items = mutableListOf<Any>(items)
+    private val items = mutableListOf<Any>().apply { addAll(items) }
 
     init {
         setHasStableIds(stableIds)
