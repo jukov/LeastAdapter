@@ -1,4 +1,4 @@
-package com.github.nitrico.lastadapter_sample.data
+package info.jukov.leastadapter_sample.data
 
 import androidx.recyclerview.widget.DiffUtil
 

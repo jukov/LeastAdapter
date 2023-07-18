@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-package com.github.nitrico.lastadapter
+package info.jukov.leastadapter
 

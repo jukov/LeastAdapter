@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.nitrico.lastadapter
+package info.jukov.leastadapter
 
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
@@ -25,6 +25,8 @@ open class Type<Item : Any, Binding : ViewBinding>() {
     internal var _onBindView: ((position: Int, item: Item, binding: Binding) -> Unit)? = null; private set
     internal var _onRecycleView: ((binding: Binding) -> Unit)? = null; private set
     internal var _getItemId: ((item: Item) -> Long)? = null; private set
+    internal var _itemComparison: ((old: Item, new: Item) -> Boolean)? = null; private set
+    internal var _contentComparison: ((old: Item, new: Item) -> Boolean)? = null; private set
 
     fun onCreateView(action: (parent: ViewGroup) -> Binding) {
         _onCreateView = action
@@ -40,5 +42,13 @@ open class Type<Item : Any, Binding : ViewBinding>() {
 
     fun getItemId(action: (item: Item) -> Long) {
         _getItemId = action
+    }
+
+    fun itemComparison(action: (old: Item, new: Item) -> Boolean) {
+        _itemComparison = action
+    }
+
+    fun contentComparison(action: (old: Item, new: Item) -> Boolean) {
+        _contentComparison = action
     }
 }

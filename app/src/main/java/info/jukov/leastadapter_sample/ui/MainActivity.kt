@@ -1,4 +1,4 @@
-package com.github.nitrico.lastadapter_sample.ui
+package info.jukov.leastadapter_sample.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

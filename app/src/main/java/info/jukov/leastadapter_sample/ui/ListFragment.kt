@@ -1,4 +1,4 @@
-package com.github.nitrico.lastadapter_sample.ui
+package info.jukov.leastadapter_sample.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,10 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.nitrico.lastadapter.LastAdapter
-import com.github.nitrico.lastadapter_sample.data.DiffCallback
-import com.github.nitrico.lastadapter_sample.data.Model
+import info.jukov.leastadapter.LeastAdapter
 import info.jukov.leastadapter_sample.R
+import info.jukov.leastadapter_sample.data.DiffCallback
+import info.jukov.leastadapter_sample.data.Model
 import info.jukov.leastadapter_sample.databinding.LayoutHeaderBinding
 import info.jukov.leastadapter_sample.databinding.LayoutItemBinding
 import java.util.Random
@@ -59,7 +59,7 @@ class ListFragment : Fragment(), MenuProvider {
         recyclerView = view.findViewById(R.id.list)
         recyclerView.layoutManager = LinearLayoutManager(activity)
 
-        adapter = LastAdapter(items)
+        adapter = LeastAdapter(items)
             .map<Model.Header, LayoutHeaderBinding>(
                 viewHolder = {
                     onCreateView { parent ->
