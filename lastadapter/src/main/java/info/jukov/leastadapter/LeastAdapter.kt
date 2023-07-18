@@ -41,6 +41,10 @@ class LeastAdapter(
         setHasStableIds(stableIds)
     }
 
+    /**
+     * Set items to [LeastAdapter]. If [diffUtil] is true, [androidx.recyclerview.widget.DiffUtil.Callback]
+     * will be used for smooth change.
+     * */
     @SuppressLint("NotifyDataSetChanged")
     fun setItems(newItems: List<Any>) {
         if (diffUtil) {
@@ -55,17 +59,29 @@ class LeastAdapter(
         }
     }
 
+    /**
+     * @param viewHolder should call methods of [Type] for handle creating view, binding view,
+     * recycling view and also provide item id, and [androidx.recyclerview.widget.DiffUtil.Callback]
+     * functionality if it was requested in [LeastAdapter] constructor.
+     * */
+    inline fun <reified M : Any, reified B: ViewBinding> map(
+        noinline viewHolder: Type<M, B>.() -> Unit
+    ): LeastAdapter = map(
+        M::class.java,
+        Type<M, B>().apply { viewHolder(this) }
+    )
+
     fun <M : Any, B: ViewBinding> map(clazz: Class<M>, type: Type<M, B>): LeastAdapter =
         apply {
-            require(type._onCreateView != null) { "onCreate not implemented" }
+            require(type._onCreateView != null) { "onCreate not set" }
             if (diffUtil) {
                 require(type._itemComparison != null && type._contentComparison != null) {
-                    error("comparisons should be implemented for using DiffUtil")
+                    error("itemComparison and contentComparison should be set for using DiffUtil")
                 }
             }
             if (hasStableIds()) {
                 require(type._getItemId != null) {
-                    "StableIds requested, but getItemId for $clazz not implemented"
+                    "StableIds requested, but getItemId for $clazz not set"
                 }
             }
 
@@ -75,18 +91,14 @@ class LeastAdapter(
             viewType++
         }
 
-    inline fun <reified M : Any, reified B: ViewBinding> map(
-        noinline viewHolder: Type<M, B>.() -> Unit
-    ): LeastAdapter = map(
-        M::class.java,
-        Type<M, B>().apply { viewHolder(this) }
-    )
-
+    /**
+     * Assign [LeastAdapter] to [androidx.recyclerview.widget.RecyclerView]
+     * */
     fun into(recyclerView: RecyclerView) = apply { recyclerView.adapter = this }
 
     override fun onCreateViewHolder(view: ViewGroup, viewType: Int): Holder {
         val type = viewTypeToType[viewType] ?: error("No Type for viewType $viewType")
-        val onCreate = type._onCreateView ?: error("onCreate for viewType $viewType not implemented")
+        val onCreate = type._onCreateView ?: error("onCreate for viewType $viewType not set")
         val binding = onCreate(view)
 
         return Holder(binding)
@@ -116,7 +128,7 @@ class LeastAdapter(
         val type = classToType[item.javaClass] as? Type<Any, ViewBinding>
             ?: error("No Type for ${item.javaClass}")
         val getItemId = type._getItemId
-            ?: error("getItemId not implemented for ${item.javaClass}")
+            ?: error("getItemId not set for ${item.javaClass}")
 
         return getItemId(item)
     }
@@ -147,7 +159,7 @@ class LeastAdapter(
 
             if (oldItem.javaClass == newItem.javaClass) {
                 val type = classToType[oldItem.javaClass] as? Type<Any, ViewBinding> ?: error("No type for ${oldItem.javaClass}")
-                val comparison = type._itemComparison ?: error("Item comparison not implemented for ${oldItem.javaClass}")
+                val comparison = type._itemComparison ?: error("itemComparison not set for ${oldItem.javaClass}")
                 return comparison(oldItem, newItem)
             }
 
@@ -161,7 +173,7 @@ class LeastAdapter(
 
             if (oldItem.javaClass == newItem.javaClass) {
                 val type = classToType[oldItem.javaClass] as? Type<Any, ViewBinding> ?: error("No type for ${oldItem.javaClass}")
-                val comparison = type._contentComparison ?: error("Content comparison not implemented for ${oldItem.javaClass}")
+                val comparison = type._contentComparison ?: error("contentComparison not set for ${oldItem.javaClass}")
                 return comparison(oldItem, newItem)
             }
 

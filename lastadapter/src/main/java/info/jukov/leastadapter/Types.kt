@@ -28,26 +28,46 @@ open class Type<Item : Any, Binding : ViewBinding>() {
     internal var _itemComparison: ((old: Item, new: Item) -> Boolean)? = null; private set
     internal var _contentComparison: ((old: Item, new: Item) -> Boolean)? = null; private set
 
+    /**
+     * @param action should provide ViewBinding for concrete item
+     * */
     fun onCreateView(action: (parent: ViewGroup) -> Binding) {
         _onCreateView = action
     }
 
+    /**
+     * @param action should bind concrete item to ViewBinding
+     * */
     fun onBindView(action: (position: Int, item: Item, binding: Binding) -> Unit) {
         _onBindView = action
     }
 
+    /**
+     * @param action optional action on view recycling
+     * */
     fun onRecycleView(action: (binding: Binding) -> Unit) {
         _onRecycleView = action
     }
 
+    /**
+     * @param action should provide stable item id if stableIds requested in [LeastAdapter] constructor
+     * */
     fun getItemId(action: (item: Item) -> Long) {
         _getItemId = action
     }
 
+    /**
+     * @param action similar to [androidx.recyclerview.widget.DiffUtil.Callback.areItemsTheSame]
+     * should return true if items the same.
+     * */
     fun itemComparison(action: (old: Item, new: Item) -> Boolean) {
         _itemComparison = action
     }
 
+    /**
+     * @param action similar to [androidx.recyclerview.widget.DiffUtil.Callback.areContentsTheSame]
+     * should return true if content of items the same.
+     * */
     fun contentComparison(action: (old: Item, new: Item) -> Boolean) {
         _contentComparison = action
     }
