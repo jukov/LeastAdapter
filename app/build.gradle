@@ -35,5 +35,5 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
-    implementation project(":lastadapter")
+    implementation project(":leastadapter")
 }
