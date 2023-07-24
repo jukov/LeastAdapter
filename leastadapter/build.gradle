@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-kapt'
 }
 
-def version = "1"
+def version = "2"
 
 android {
     namespace "info.jukov.leastadapter"

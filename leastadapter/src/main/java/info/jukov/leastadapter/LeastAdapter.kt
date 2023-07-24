@@ -27,13 +27,14 @@ class LeastAdapter(
     items: List<Any> = emptyList(),
     stableIds: Boolean = false,
     private val diffUtil: Boolean = false
-) : RecyclerView.Adapter<LeastAdapter.Holder>() {
+) : RecyclerView.Adapter<LeastAdapter.Holder<Any>>() {
 
     private var viewType = 0
 
     private val classToViewType = mutableMapOf<Class<*>, Int>()
     private val classToType = mutableMapOf<Class<*>, Type<*, *>>()
     private val viewTypeToType = mutableMapOf<Int, Type<*, *>>()
+    private val viewTypeToClass = mutableMapOf<Int, Class<*>>()
 
     private val items = mutableListOf<Any>().apply { addAll(items) }
 
@@ -96,7 +97,7 @@ class LeastAdapter(
      * */
     fun into(recyclerView: RecyclerView) = apply { recyclerView.adapter = this }
 
-    override fun onCreateViewHolder(view: ViewGroup, viewType: Int): Holder {
+    override fun onCreateViewHolder(view: ViewGroup, viewType: Int): Holder<Any> {
         val type = viewTypeToType[viewType] ?: error("No Type for viewType $viewType")
         val onCreate = type._onCreateView ?: error("onCreate for viewType $viewType not set")
         val binding = onCreate(view)
@@ -105,16 +106,18 @@ class LeastAdapter(
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun onBindViewHolder(holder: Holder, position: Int) {
-        val model = items[position]
+    override fun onBindViewHolder(holder: Holder<Any>, position: Int) {
+        val item = items[position]
 
         val type = getType(position) as Type<Any, ViewBinding>
 
-        type._onBindView?.invoke(position, model, holder.binding)
+        holder.item = item
+
+        type._onBindView?.invoke(position, item, holder.binding)
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun onViewRecycled(holder: Holder) {
+    override fun onViewRecycled(holder: Holder<Any>) {
         val position = holder.bindingAdapterPosition
         if (position != RecyclerView.NO_POSITION && position < items.size) {
             val type = getType(position) as Type<Any, ViewBinding>
@@ -145,7 +148,9 @@ class LeastAdapter(
         return classToType[itemClass] ?: error("No Type for $itemClass")
     }
 
-    class Holder(val binding: ViewBinding) : RecyclerView.ViewHolder(binding.root)
+    class Holder<Item: Any>(val binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+        var item: Item? = null
+    }
 
     private inner class DiffCallback(private val old: ArrayList<Any>) : DiffUtil.Callback() {
         override fun getOldListSize(): Int = old.size
