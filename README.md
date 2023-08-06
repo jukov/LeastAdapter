@@ -46,7 +46,7 @@ android {
 }
   
 dependencies {
-    implementation 'com.github.jukov:leastadapter:3.0.0'
+    implementation 'com.github.jukov:leastadapter:2'
 }
 ```
 
