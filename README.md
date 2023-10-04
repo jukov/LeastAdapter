@@ -11,7 +11,7 @@ RecyclerView adapters in convenient way.
 * No need to implement DiffUtil.Callback
 * Supports multiple item view types
 * Optional Callbacks/Listeners
-* Minimum Android SDK: 21
+* Minimum Android SDK: 14
 
 ## Setup
 

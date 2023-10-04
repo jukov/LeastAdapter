@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-kapt'
 }
 
-def version = "2"
+def version = "3"
 
 android {
     namespace "info.jukov.leastadapter"
@@ -27,13 +27,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    libraryVariants.all { variant ->
-        variant.outputs.all {
+    libraryVariants.configureEach { variant ->
+        variant.outputs.configureEach {
             outputFileName = "leastadapter-${variant.name}-${version}.aar"
         }
     }
 }
 
 dependencies {
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
 }
