@@ -1,0 +1,4 @@
+# Preserve ViewBinding classes to be able create them using reflection
+-keepclassmembers class * implements androidx.viewbinding.ViewBinding {
+    *;
+}

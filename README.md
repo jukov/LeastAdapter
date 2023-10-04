@@ -134,6 +134,12 @@ Stable ids is also supported in LeastAdapter.
 
 To use that, you need to set the flag `stableIds = true` in constructor, and either implement the `StableId` interface for your Items, or call the `getItemId()` method in a `map` function and check items there.
 
+## R8 / Proguard
+
+The rules are [already included](leastadapter/proguard-rules.txt) in the library and R8 will use them directly.
+
+If you still use ProGuard, you need to add these rules manually.
+
 ## License
 
 ```txt
