@@ -142,7 +142,8 @@ class LeastAdapter(
     }
 
     class Holder<Item: Any, Binding: ViewBinding>(val binding: Binding) : RecyclerView.ViewHolder(binding.root) {
-        internal var item: Item? = null
+        var item: Item? = null
+            internal set
     }
 
     private inner class DiffCallback(private val old: ArrayList<Any>) : DiffUtil.Callback() {
