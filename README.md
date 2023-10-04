@@ -4,14 +4,14 @@ LeastAdapter is inspired by [LastAdapter](https://github.com/nitrico/LastAdapter
 RecyclerView adapters in convenient way.
 
 * Based on Android [ViewBinding](https://developer.android.com/topic/libraries/view-binding)
-* Written in [**Kotlin**](http://kotlinlang.org)
+* Written in [Kotlin](http://kotlinlang.org)
 * No additional dependencies except RecyclerView itself
 * No need to write the ViewHolders
 * No need to modify your model classes
 * No need to implement DiffUtil.Callback
 * Supports multiple item view types
 * Optional Callbacks/Listeners
-* Minimum Android SDK: **14**
+* Minimum Android SDK: 21
 
 ## Setup
 
@@ -46,6 +46,7 @@ android {
 }
   
 dependencies {
+    // Add LeastAdapter dependency
     implementation 'com.github.jukov:leastadapter:2'
 }
 ```
@@ -64,12 +65,8 @@ adapter = LeastAdapter(
     // Map Header model to corresponding ViewBinding
     .map<Model.Header, LayoutHeaderBinding>(
         viewHolder = {
-            // Specify ViewBinding provider
-            onCreateView { parent ->
-                LayoutHeaderBinding.inflate(layoutInflater, parent, false)  
-            }
             // Specify way for binding view
-            onBindView { _, model, binding ->
+            onBindView { position, model, binding ->
                 binding.headerText.text = model.text
                 binding.root.setOnClickListener {
                     toast("Click on ${model.text}")

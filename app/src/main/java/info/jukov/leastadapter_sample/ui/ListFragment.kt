@@ -65,9 +65,6 @@ class ListFragment : Fragment(), MenuProvider {
         )
             .map<Model.Header, LayoutHeaderBinding>(
                 viewHolder = {
-                    onCreateView { parent ->
-                        LayoutHeaderBinding.inflate(layoutInflater, parent, false)
-                    }
                     onBindView { _, model, binding ->
                         binding.headerText.text = model.text
                         binding.root.setOnClickListener {
@@ -87,9 +84,6 @@ class ListFragment : Fragment(), MenuProvider {
             )
             .map<Model.Item, LayoutItemBinding>(
                 viewHolder = {
-                    onCreateView { parent ->
-                        LayoutItemBinding.inflate(layoutInflater, parent, false)
-                    }
                     onBindView { _, model, binding ->
                         binding.text.text = model.text
                         binding.root.setOnClickListener {

@@ -16,23 +16,32 @@
 
 package info.jukov.leastadapter
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 
 @Suppress("unused", "PropertyName")
-open class Type<Item : Any, Binding : ViewBinding>() {
-    internal var _onCreateView: ((parent: ViewGroup) -> Binding)? = null; private set
+open class Type<Item : Any, Binding : ViewBinding>(
+    private val vbClass: Class<Binding>
+) {
+    internal var _onCreateView: ((parent: ViewGroup) -> Binding)? = { parent ->
+        createBindingInstance(LayoutInflater.from(parent.context), parent)
+    }
     internal var _onBindView: ((position: Int, item: Item, binding: Binding) -> Unit)? = null; private set
     internal var _onRecycleView: ((binding: Binding) -> Unit)? = null; private set
     internal var _getItemId: ((item: Item) -> Long)? = null; private set
     internal var _itemComparison: ((old: Item, new: Item) -> Boolean)? = null; private set
     internal var _contentComparison: ((old: Item, new: Item) -> Boolean)? = null; private set
 
-    /**
-     * @param action should provide ViewBinding for concrete item
-     * */
-    fun onCreateView(action: (parent: ViewGroup) -> Binding) {
-        _onCreateView = action
+    @Suppress("UNCHECKED_CAST")
+    private fun createBindingInstance(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): Binding {
+        val method = vbClass.getMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
+
+        // Call Binding.inflate(inflater, container, false) Java static method
+        return method.invoke(null, inflater, container, false) as Binding
     }
 
     /**

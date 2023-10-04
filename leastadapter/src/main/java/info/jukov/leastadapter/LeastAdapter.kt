@@ -69,7 +69,7 @@ class LeastAdapter(
         noinline viewHolder: Type<M, B>.() -> Unit
     ): LeastAdapter = map(
         M::class.java,
-        Type<M, B>().apply { viewHolder(this) }
+        Type<M, B>(B::class.java).apply { viewHolder(this) }
     )
 
     fun <M : Any, B: ViewBinding> map(clazz: Class<M>, type: Type<M, B>): LeastAdapter =
