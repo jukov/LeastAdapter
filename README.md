@@ -65,13 +65,36 @@ adapter = LeastAdapter(
     // Map Header model to corresponding ViewBinding
     .map<Model.Header, LayoutHeaderBinding>(
         viewHolder = {
-            // Specify way for binding view
-            onBindView { model, binding, position ->
-                binding.headerText.text = model.text
+            // Specify the way for binding view. Choose one of the options:
+            // Option 1 - provides item and ViewBinding
+            onBindView { item, binding ->
+                binding.headerText.text = item.text
                 binding.root.setOnClickListener {
-                    toast("Click on ${model.text}")
+                    toast("Click on ${item.text}")
                 }
             }
+            // Option 2 - provides item, ViewBinding and current item position
+            onBindView { item, binding, position ->
+                binding.headerText.text = item.text
+                binding.root.setOnClickListener {
+                    toast("Click on ${item.text}")
+                }
+            }
+            // Option 3 - provides item and Holder
+            onBindView { item, holder ->
+                holder.binding.headerText.text = item.text
+                holder.binding.root.setOnClickListener {
+                    toast("Click on ${item.text}")
+                }
+            }
+            // Option 4 - provides item, Holder and current item position
+            onBindView { item, holder, position ->
+                holder.binding.headerText.text = item.text
+                holder.binding.root.setOnClickListener {
+                    toast("Click on ${item.text}")
+                }
+            }
+            
             // Optional stableId provider
             getItemId { model ->
                 model.id.toLong()

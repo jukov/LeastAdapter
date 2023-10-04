@@ -27,7 +27,7 @@ open class Type<Item : Any, Binding : ViewBinding>(
     internal var _onCreateView: ((parent: ViewGroup) -> Binding)? = { parent ->
         createBindingInstance(LayoutInflater.from(parent.context), parent)
     }
-    internal var _onBindView: ((item: Item, binding: Binding, position: Int) -> Unit)? = null; private set
+    internal var _onBindView: ((holder: LeastAdapter.Holder<Item, Binding>, position: Int) -> Unit)? = null; private set
     internal var _onRecycleView: ((binding: Binding) -> Unit)? = null; private set
     internal var _getItemId: ((item: Item) -> Long)? = null; private set
     internal var _itemComparison: ((old: Item, new: Item) -> Boolean)? = null; private set
@@ -45,20 +45,42 @@ open class Type<Item : Any, Binding : ViewBinding>(
     }
 
     /**
+     * @param action should bind concrete item to Holder
+     * */
+    fun onBindViewHolder(action: (item: Item, holder: LeastAdapter.Holder<Item, Binding>, position: Int) -> Unit) {
+        if (_onBindView != null) error("Bind can be performed only once per mapper")
+        _onBindView = { holder, position ->
+            action(requireNotNull(holder.item), holder, position)
+        }
+    }
+
+    /**
+     * @param action should bind concrete item to Holder
+     * */
+    fun onBindViewHolder(action: (item: Item, holder: LeastAdapter.Holder<Item, Binding>) -> Unit) {
+        if (_onBindView != null) error("Bind can be performed only once per mapper")
+        _onBindView = { holder, _ ->
+            action(requireNotNull(holder.item), holder)
+        }
+    }
+
+    /**
      * @param action should bind concrete item to ViewBinding
      * */
     fun onBindView(action: (item: Item, binding: Binding, position: Int) -> Unit) {
-        if (_onBindView != null) error("onBindView can be called only once")
-        _onBindView = action
+        if (_onBindView != null) error("Bind can be performed only once per mapper")
+        _onBindView = { holder, position ->
+            action(requireNotNull(holder.item), holder.binding, position)
+        }
     }
 
     /**
      * @param action should bind concrete item to ViewBinding
      * */
     fun onBindView(action: (item: Item, binding: Binding) -> Unit) {
-        if (_onBindView != null) error("onBindView can be called only once per mapper")
-        _onBindView = { item, binding, _ ->
-            action(item, binding)
+        if (_onBindView != null) error("Bind can be performed only once per mapper")
+        _onBindView = { holder, _ ->
+            action(requireNotNull(holder.item), holder.binding)
         }
     }
 
