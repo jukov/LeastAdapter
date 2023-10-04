@@ -1,6 +1,6 @@
 # LeastAdapter
 
-LeastAdapter is inspired by [LastAdapter](https://github.com/nitrico/LastAdapter ) lib for writing
+LeastAdapter is inspired by [LastAdapter](https://github.com/nitrico/LastAdapter) lib for writing
 RecyclerView adapters in convenient way.
 
 * Based on Android [ViewBinding](https://developer.android.com/topic/libraries/view-binding)
