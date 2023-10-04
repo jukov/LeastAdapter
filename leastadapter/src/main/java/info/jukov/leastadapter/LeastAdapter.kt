@@ -74,13 +74,6 @@ class LeastAdapter(
 
     fun <M : Any, B: ViewBinding> map(clazz: Class<M>, type: Type<M, B>): LeastAdapter =
         apply {
-            require(type._onCreateView != null) { "onCreate not set" }
-            if (hasStableIds()) {
-                require(type._getItemId != null) {
-                    "StableIds requested, but getItemId for $clazz not set"
-                }
-            }
-
             classToType[clazz] = type
             classToViewType[clazz] = viewType
             viewTypeToType[viewType] = type
