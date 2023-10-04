@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.jukov.leastadapter.LeastAdapter
+import info.jukov.leastadapter.NotifyChange
 import info.jukov.leastadapter_sample.R
 import info.jukov.leastadapter_sample.data.Model
 import info.jukov.leastadapter_sample.databinding.LayoutHeaderBinding
@@ -61,7 +62,7 @@ class ListFragment : Fragment(), MenuProvider {
         adapter = LeastAdapter(
             items,
             stableIds = true,
-            diffUtil = true
+            notifyChange = NotifyChange.DIFF_UTIL
         )
             .map<Model.Header, LayoutHeaderBinding>(
                 viewHolder = {

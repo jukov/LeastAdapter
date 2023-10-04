@@ -26,7 +26,7 @@ import androidx.viewbinding.ViewBinding
 class LeastAdapter(
     items: List<Any> = emptyList(),
     stableIds: Boolean = false,
-    private val diffUtil: Boolean = false
+    private val notifyChange: NotifyChange = NotifyChange.PLAIN
 ) : RecyclerView.Adapter<LeastAdapter.Holder<Any, ViewBinding>>() {
 
     private var viewType = 0
@@ -43,20 +43,26 @@ class LeastAdapter(
     }
 
     /**
-     * Set items to [LeastAdapter]. If [diffUtil] is true, [androidx.recyclerview.widget.DiffUtil.Callback]
-     * will be used for smooth change.
+     * Set items to [LeastAdapter].
      * */
     @SuppressLint("NotifyDataSetChanged")
     fun setItems(newItems: List<Any>) {
-        if (diffUtil) {
-            val old = ArrayList(items)
-            items.clear()
-            items.addAll(newItems)
-            DiffUtil.calculateDiff(DiffCallback(old)).dispatchUpdatesTo(this)
-        } else {
-            items.clear()
-            items.addAll(newItems)
-            notifyDataSetChanged()
+        when (notifyChange) {
+            NotifyChange.DIFF_UTIL -> {
+                val old = ArrayList(items)
+                items.clear()
+                items.addAll(newItems)
+                DiffUtil.calculateDiff(DiffCallback(old)).dispatchUpdatesTo(this)
+            }
+            NotifyChange.PLAIN -> {
+                items.clear()
+                items.addAll(newItems)
+                notifyDataSetChanged()
+            }
+            NotifyChange.MANUAL -> {
+                items.clear()
+                items.addAll(newItems)
+            }
         }
     }
 

@@ -60,7 +60,7 @@ dependencies {
 adapter = LeastAdapter(
     items = items, // Optional way to provide initial data to provider
     stableIds = true, // Set true if you want to provide stableIds to RecyclerView
-    diffUtil = true  // Set true if you want to use DiffUtil for smooth updates
+    notifyChange = NotifyChange.DIFF_UTIL // Possible values are DIFF_UTIL, PLAIN, MANUAL
 )
     // Map Header model to corresponding ViewBinding
     .map<Model.Header, LayoutHeaderBinding>(
@@ -121,12 +121,13 @@ adapter = LeastAdapter(
 
 [DiffUtil](https://developer.android.com/reference/androidx/recyclerview/widget/DiffUtil) is internally supported in LeastAdapter. There is no need to implement [ItemCallback](https://developer.android.com/reference/androidx/recyclerview/widget/DiffUtil.ItemCallback) to use it.
 
-All you need to do is set the flag `diffUtil = true` in constructor, and either implement the `StableId` interface for your Items, or call the `itemComparison()` method in a `map` function and check the items there.
+All you need to do is set the flag `notifyChange = NotifyChange.DIFF_UTIL` in constructor, and either implement the `StableId` interface for your Items, or call the `itemComparison()` method in a `map` function and check the items there.
 There is also an optional method `contentComparison()`. By default LeastAdapter checks items content using the `equals()` method.
 
 New items can be provided with the `setItems()` method.
 
-With flag `diffUtil = false`, LeastAdapter uses plain old `notifyDataSetChanged()`.
+With flag `notifyChange = NotifyChange.PLAIN`, LeastAdapter uses `notifyDataSetChanged()`.
+With flag `notifyChange = NotifyChange.MANUAL`, LeastAdapter just set new items to internal list`.
 
 ## StableIds
 
