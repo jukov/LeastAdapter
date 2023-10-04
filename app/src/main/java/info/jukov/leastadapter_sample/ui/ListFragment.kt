@@ -65,7 +65,7 @@ class ListFragment : Fragment(), MenuProvider {
         )
             .map<Model.Header, LayoutHeaderBinding>(
                 viewHolder = {
-                    onBindView { _, model, binding ->
+                    onBindView { model, binding ->
                         binding.headerText.text = model.text
                         binding.root.setOnClickListener {
                             toast("Click on ${model.text}")
@@ -84,7 +84,7 @@ class ListFragment : Fragment(), MenuProvider {
             )
             .map<Model.Item, LayoutItemBinding>(
                 viewHolder = {
-                    onBindView { _, model, binding ->
+                    onBindView { model, binding ->
                         binding.text.text = model.text
                         binding.root.setOnClickListener {
                             toast("Click on ${model.text}")

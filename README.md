@@ -66,7 +66,7 @@ adapter = LeastAdapter(
     .map<Model.Header, LayoutHeaderBinding>(
         viewHolder = {
             // Specify way for binding view
-            onBindView { position, model, binding ->
+            onBindView { model, binding, position ->
                 binding.headerText.text = model.text
                 binding.root.setOnClickListener {
                     toast("Click on ${model.text}")

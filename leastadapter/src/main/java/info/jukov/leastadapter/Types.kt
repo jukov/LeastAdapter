@@ -27,7 +27,7 @@ open class Type<Item : Any, Binding : ViewBinding>(
     internal var _onCreateView: ((parent: ViewGroup) -> Binding)? = { parent ->
         createBindingInstance(LayoutInflater.from(parent.context), parent)
     }
-    internal var _onBindView: ((position: Int, item: Item, binding: Binding) -> Unit)? = null; private set
+    internal var _onBindView: ((item: Item, binding: Binding, position: Int) -> Unit)? = null; private set
     internal var _onRecycleView: ((binding: Binding) -> Unit)? = null; private set
     internal var _getItemId: ((item: Item) -> Long)? = null; private set
     internal var _itemComparison: ((old: Item, new: Item) -> Boolean)? = null; private set
@@ -47,8 +47,19 @@ open class Type<Item : Any, Binding : ViewBinding>(
     /**
      * @param action should bind concrete item to ViewBinding
      * */
-    fun onBindView(action: (position: Int, item: Item, binding: Binding) -> Unit) {
+    fun onBindView(action: (item: Item, binding: Binding, position: Int) -> Unit) {
+        if (_onBindView != null) error("onBindView can be called only once")
         _onBindView = action
+    }
+
+    /**
+     * @param action should bind concrete item to ViewBinding
+     * */
+    fun onBindView(action: (item: Item, binding: Binding) -> Unit) {
+        if (_onBindView != null) error("onBindView can be called only once")
+        _onBindView = { item, binding, _ ->
+            action(item, binding)
+        }
     }
 
     /**
