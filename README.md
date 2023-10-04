@@ -72,15 +72,15 @@ adapter = LeastAdapter(
                     toast("Click on ${model.text}")
                 }
             }
-            // Specify stableId provider
+            // Optional stableId provider
             getItemId { model ->
                 model.id.toLong()
             }
-            // Specify item comparison for DiffUtil, similar to method DiffUtil.Callback.areItemsTheSame()
+            // Optional item comparison for DiffUtil, similar to method DiffUtil.Callback.areItemsTheSame()
             itemComparison { old, new ->  
                 old.id == new.id
             }
-            // Specify item comparison for DiffUtil, similar to method DiffUtil.Callback.areContentsTheSame()
+            // Optional content comparison for DiffUtil, similar to method DiffUtil.Callback.areContentsTheSame()
             contentComparison { old, new ->
                 old == new
             }
@@ -93,6 +93,19 @@ adapter = LeastAdapter(
     .into(recyclerView)
 
 ```
+
+## DiffUtil
+
+[DiffUtil](https://developer.android.com/reference/androidx/recyclerview/widget/DiffUtil) is internally supported in LeastAdapter. There is no need to implement [ItemCallback](https://developer.android.com/reference/androidx/recyclerview/widget/DiffUtil.ItemCallback) to use it. 
+All you need to do is set the flag `diffUtil = true` in constructor, and either implement the `StableId` interface for your Items, or call the `itemComparison()` method in a `map` function and check the items there.
+There is also an optional method `contentComparison()`. By default LeastAdapter checks items content using the `equals()` method.
+New items can be provided with the `setItems()` method.
+With flag `diffUtil = false`, LeastAdapter uses plain old `notifyDataSetChanged()`.
+
+## StableIds
+
+Stable ids is also supported in LeastAdapter.
+To use that, you need to set the flag `stableIds = true` in constructor, and either implement the `StableId` interface for your Items, or call the `getItemId()` method in a `map` function and check items there.
 
 ## License
 

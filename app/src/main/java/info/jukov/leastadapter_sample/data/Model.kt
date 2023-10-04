@@ -1,5 +1,7 @@
 package info.jukov.leastadapter_sample.data
 
+import info.jukov.leastadapter.StableId
+
 sealed class Model {
 
     data class Item(
@@ -10,5 +12,7 @@ sealed class Model {
     data class Header(
         val id: Int,
         val text: String
-    ) : Model()
+    ) : Model(), StableId {
+        override val stableId: Long = id.toLong()
+    }
 }

@@ -74,12 +74,6 @@ class ListFragment : Fragment(), MenuProvider {
                     getItemId { model ->
                         model.id.toLong()
                     }
-                    itemComparison { old, new ->
-                        old.id == new.id
-                    }
-                    contentComparison { old, new ->
-                        old == new
-                    }
                 }
             )
             .map<Model.Item, LayoutItemBinding>(

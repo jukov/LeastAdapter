@@ -75,11 +75,6 @@ class LeastAdapter(
     fun <M : Any, B: ViewBinding> map(clazz: Class<M>, type: Type<M, B>): LeastAdapter =
         apply {
             require(type._onCreateView != null) { "onCreate not set" }
-            if (diffUtil) {
-                require(type._itemComparison != null && type._contentComparison != null) {
-                    error("itemComparison and contentComparison should be set for using DiffUtil")
-                }
-            }
             if (hasStableIds()) {
                 require(type._getItemId != null) {
                     "StableIds requested, but getItemId for $clazz not set"
@@ -113,7 +108,7 @@ class LeastAdapter(
 
         holder.item = item
 
-        type._onBindView?.invoke(position, item, holder.binding)
+        type._onBindView?.invoke(item, holder.binding, position)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -131,9 +126,14 @@ class LeastAdapter(
         val type = classToType[item.javaClass] as? Type<Any, ViewBinding>
             ?: error("No Type for ${item.javaClass}")
         val getItemId = type._getItemId
-            ?: error("getItemId not set for ${item.javaClass}")
+        if (getItemId != null) {
+            return getItemId(item)
+        }
+        if (item is StableId) {
+            return item.stableId
+        }
 
-        return getItemId(item)
+        error("Cannot get itemId. ${item.javaClass} should implement StableId or getItemId method should be set to his mapper")
     }
 
     override fun getItemCount() = items.size
@@ -164,8 +164,14 @@ class LeastAdapter(
 
             if (oldItem.javaClass == newItem.javaClass) {
                 val type = classToType[oldItem.javaClass] as? Type<Any, ViewBinding> ?: error("No type for ${oldItem.javaClass}")
-                val comparison = type._itemComparison ?: error("itemComparison not set for ${oldItem.javaClass}")
-                return comparison(oldItem, newItem)
+                val comparison = type._itemComparison
+                if (comparison != null) {
+                    return comparison(oldItem, newItem)
+                }
+                if (oldItem is StableId && newItem is StableId) {
+                    return oldItem.stableId == newItem.stableId
+                }
+                error("Cannot check are items the same. ${oldItem.javaClass} should implement StableId or itemComparison method should be set to his mapper")
             }
 
             return false
@@ -178,8 +184,13 @@ class LeastAdapter(
 
             if (oldItem.javaClass == newItem.javaClass) {
                 val type = classToType[oldItem.javaClass] as? Type<Any, ViewBinding> ?: error("No type for ${oldItem.javaClass}")
-                val comparison = type._contentComparison ?: error("contentComparison not set for ${oldItem.javaClass}")
-                return comparison(oldItem, newItem)
+
+                val comparison = type._contentComparison
+                return if (comparison != null) {
+                    comparison(oldItem, newItem)
+                } else {
+                    oldItem == newItem
+                }
             }
 
             return false

@@ -56,7 +56,7 @@ open class Type<Item : Any, Binding : ViewBinding>(
      * @param action should bind concrete item to ViewBinding
      * */
     fun onBindView(action: (item: Item, binding: Binding) -> Unit) {
-        if (_onBindView != null) error("onBindView can be called only once")
+        if (_onBindView != null) error("onBindView can be called only once per mapper")
         _onBindView = { item, binding, _ ->
             action(item, binding)
         }
