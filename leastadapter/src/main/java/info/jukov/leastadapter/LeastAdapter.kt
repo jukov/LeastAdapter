@@ -29,7 +29,7 @@ class LeastAdapter(
     private val notifyChange: NotifyChange = NotifyChange.PLAIN
 ) : RecyclerView.Adapter<LeastAdapter.Holder<Any, ViewBinding>>() {
 
-    private var viewType = 0
+    private var viewType = 1_000_000
 
     private val classToViewType = mutableMapOf<Class<*>, Int>()
     private val classToType = mutableMapOf<Class<*>, Type<*, *>>()
@@ -81,9 +81,8 @@ class LeastAdapter(
     fun <M : Any, B: ViewBinding> map(clazz: Class<M>, type: Type<M, B>): LeastAdapter =
         apply {
             classToType[clazz] = type
-            classToViewType[clazz] = viewType
-            viewTypeToType[viewType] = type
-            viewType++
+            classToViewType[clazz] = type._getItemViewType?.invoke() ?: viewType++
+            viewTypeToType[classToViewType.getValue(clazz)] = type
         }
 
     /**

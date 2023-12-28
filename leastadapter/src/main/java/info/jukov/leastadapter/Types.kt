@@ -30,6 +30,7 @@ open class Type<Item : Any, Binding : ViewBinding>(
     internal var _onBindView: ((holder: LeastAdapter.Holder<Item, Binding>, position: Int) -> Unit)? = null; private set
     internal var _onRecycleView: ((binding: Binding) -> Unit)? = null; private set
     internal var _getItemId: ((item: Item) -> Long)? = null; private set
+    internal var _getItemViewType: (() -> Int)? = null; private set
     internal var _itemComparison: ((old: Item, new: Item) -> Boolean)? = null; private set
     internal var _contentComparison: ((old: Item, new: Item) -> Boolean)? = null; private set
 
@@ -96,6 +97,17 @@ open class Type<Item : Any, Binding : ViewBinding>(
      * */
     fun getItemId(action: (item: Item) -> Long) {
         _getItemId = action
+    }
+
+    /**
+     * @param action optional viewType provider.
+     *
+     * Note: for types that don't provide viewType explicitly,
+     * viewType going to be assigned using internal counter from 1 000 000.
+     * Eg. first type will have viewType 1 000 000, second 1 000 001 and so on.
+     * */
+    fun getItemViewType(action: () -> Int) {
+        _getItemViewType = action
     }
 
     /**

@@ -75,6 +75,7 @@ class ListFragment : Fragment(), MenuProvider {
                     getItemId { model ->
                         model.id.toLong()
                     }
+                    getItemViewType { 123 }
                 }
             )
             .map<Model.Item, LayoutItemBinding>(
