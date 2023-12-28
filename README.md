@@ -99,6 +99,12 @@ adapter = LeastAdapter(
             getItemId { model ->
                 model.id.toLong()
             }
+
+            // Optional viewType provider
+            getItemViewType { 
+                100
+            }
+            
             // Optional item comparison for DiffUtil, similar to method DiffUtil.Callback.areItemsTheSame()
             itemComparison { old, new ->  
                 old.id == new.id
@@ -128,6 +134,10 @@ New items can be provided with the `setItems()` method.
 
 With flag `notifyChange = NotifyChange.PLAIN`, LeastAdapter uses `notifyDataSetChanged()`.
 With flag `notifyChange = NotifyChange.MANUAL`, LeastAdapter just set new items to internal list`.
+
+## Item viewType
+
+By default, LeastAdapter generates viewTypes internally. However, you can assign explicit viewType for an item using `getItemViewType()` method in a `map` function.
 
 ## StableIds
 
