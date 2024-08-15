@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
 }
 
-def version = "10"
+def version = "11"
 
 android {
     namespace "info.jukov.leastadapter"

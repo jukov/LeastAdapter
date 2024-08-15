@@ -18,6 +18,7 @@ package info.jukov.leastadapter
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -72,13 +73,20 @@ class LeastAdapter(
      * functionality if it was requested in [LeastAdapter] constructor.
      * */
     inline fun <reified M : Any, reified B: ViewBinding> map(
+        @LayoutRes layoutId: Int = 0,
         noinline viewHolder: Type<M, B>.() -> Unit
     ): LeastAdapter = map(
         M::class.java,
-        Type<M, B>(B::class.java).apply { viewHolder(this) }
+        Type<M, B>(B::class.java).apply { viewHolder(this) },
+        layoutId
     )
 
-    fun <M : Any, B: ViewBinding> map(clazz: Class<M>, type: Type<M, B>): LeastAdapter =
+    @Suppress("UNUSED_PARAMETER")
+    fun <M : Any, B: ViewBinding> map(
+        clazz: Class<M>,
+        type: Type<M, B>,
+        @LayoutRes layoutId: Int = 0,
+    ): LeastAdapter =
         apply {
             classToType[clazz] = type
             classToViewType[clazz] = type._getItemViewType?.invoke() ?: viewType++
